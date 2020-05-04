@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1588415232963" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="test" isClosed="false" isExecutable="true" name="test" processType="None">
+    <startEvent id="startEvent" name="Start"/>
+    <userTask activiti:candidateGroups="managers" activiti:exclusive="true" id="usertask1" name="Enter Data">
+      <extensionElements>
+        <activiti:formProperty id="fullName" name="Full Name" type="string"/>
+        <activiti:formProperty id="role" name="Role" type="string"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="usertask1"/>
+    <exclusiveGateway default="automatedIntroPath" gatewayDirection="Unspecified" id="decision" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow3" sourceRef="usertask1" targetRef="decision"/>
+    <userTask activiti:candidateGroups="managers" activiti:exclusive="true" id="approved" name="Approved">
+      <extensionElements>
+        <activiti:formProperty id="personalWelcomeTime" name="Personal Welcome Time" type="date"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="personalIntroPath" name="Role eq admin" sourceRef="decision" targetRef="approved">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${role == 'admin'}]]></conditionExpression>
+    </sequenceFlow>
+    <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="rejected" name="Rejected" scriptFormat="javascript">
+      <script><![CDATA[var dateAsString = new Date().toString();
+execution.setVariable("autoWelcomeTime", dateAsString);]]></script>
+    </scriptTask>
+    <sequenceFlow id="automatedIntroPath" sourceRef="decision" targetRef="rejected"/>
+    <endEvent id="endEvent" name="End"/>
+    <sequenceFlow id="flow4" sourceRef="rejected" targetRef="endEvent"/>
+    <sequenceFlow id="flow5" sourceRef="approved" targetRef="endEvent"/>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="test">
+      <bpmndi:BPMNShape bpmnElement="startEvent" id="Shape-startEvent">
+        <omgdc:Bounds height="32.0" width="32.0" x="223.0" y="370.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="Shape-usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="450.0" y="360.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="decision" id="Shape-decision" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="600.0" y="368.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approved" id="Shape-approved">
+        <omgdc:Bounds height="65.0" width="171.0" x="535.0" y="160.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="65.0" width="171.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejected" id="Shape-rejected">
+        <omgdc:Bounds height="55.0" width="105.0" x="719.0" y="360.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEvent" id="Shape-endEvent">
+        <omgdc:Bounds height="32.0" width="32.0" x="850.0" y="250.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="automatedIntroPath" id="BPMNEdge_automatedIntroPath" sourceElement="decision" targetElement="rejected">
+        <omgdi:waypoint x="632.0" y="384.0"/>
+        <omgdi:waypoint x="719.0" y="387.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="personalIntroPath" id="BPMNEdge_personalIntroPath" sourceElement="decision" targetElement="approved">
+        <omgdi:waypoint x="616.0" y="368.0"/>
+        <omgdi:waypoint x="616.0" y="225.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="54.0" width="100.0" x="620.0" y="271.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1" sourceElement="startEvent" targetElement="usertask1">
+        <omgdi:waypoint x="255.0" y="386.0"/>
+        <omgdi:waypoint x="450.0" y="387.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3" sourceElement="usertask1" targetElement="decision">
+        <omgdi:waypoint x="555.0" y="387.5"/>
+        <omgdi:waypoint x="600.0" y="384.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4" sourceElement="rejected" targetElement="endEvent">
+        <omgdi:waypoint x="824.0" y="385.0"/>
+        <omgdi:waypoint x="867.0" y="385.0"/>
+        <omgdi:waypoint x="867.0" y="281.9687194226713"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5" sourceElement="approved" targetElement="endEvent">
+        <omgdi:waypoint x="706.0" y="193.0"/>
+        <omgdi:waypoint x="781.0" y="193.0"/>
+        <omgdi:waypoint x="867.0" y="193.0"/>
+        <omgdi:waypoint x="850.0" y="266.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
